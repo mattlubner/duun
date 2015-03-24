@@ -41,8 +41,8 @@ var mockConsole = {
 mockConsole.resetSpies();
 
 
-var logger = require( '../lib/logger' )( mockConsole );
-var duun = require( '../lib/duun' );
+var logger = require( '../logger' )( mockConsole );
+var duun = require( '../duun' );
 
 
 describe( 'logger', function () {

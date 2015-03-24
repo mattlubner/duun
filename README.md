@@ -4,11 +4,10 @@ Duun (pronounced like the film [_Dune_](http://en.wikipedia.org/wiki/Dune_(film)
 
 
 ## Duun Basics
-Duun is written in CommonJS, so be sure to use a bundler like [Webpack](http://webpack.github.io) or [Browserify](http://browserify.org) to get it into the browser!
+Duun is written in CommonJS, so be sure to use a bundler like [Webpack](http://webpack.github.io) or [Browserify](http://browserify.org) to get it into the browser! Although it will work just fine in a Node back-end as well.
 
 _**In a shell:**_
 ```sh
-# you gotta have it, before you can use it...
 $ npm install --save-dev duun
 ```
 
@@ -148,18 +147,18 @@ module.exports = routes;
 
 
 ## Using Duun Plugins
-Currently, the only Duun plugin available is `duun/lib/logger`, which is already pre-bundled with Duun! But, since you made it this far and are thusly a curious one…
+Currently, the only Duun plugin available is `duun/logger`, which is already pre-bundled with Duun! But, since you made it this far and are thusly a curious one…
 
 _**example3/app.js:**_
 ```js
 // get a logger-less duun…
-var duun = require( 'duun/lib/duun' )
+var duun = require( 'duun/duun' )
   .create( 'example3/app' );
 
 // get a duun-less logger…
-var logger = require( 'duun/lib/logger' );
+var logger = require( 'duun/logger' );
 
-// duun/lib/logger is a fancy-pants _duuned_ plugin, so not only does it tell
+// duun/logger is a fancy-pants _duuned_ plugin, so not only does it tell
 // duun which methods to proxy (via logger.duun()), it also gets duun to pass
 // duun.name to its logger.create() factory (via logger.duuned()). Way rad!
 duun.register( 'logger', logger );
@@ -170,4 +169,4 @@ duun.register( 'logger', logger );
 
 
 ## Authoring Duun Plugins
-_Perhaps I'll write some docs on writing Duun plugins in the near future, but for now, feel free to take a look at `lib/logger.js`… Methinks you don't need that copy-pasted into the readme! :P_
+_Perhaps I'll write some docs on writing Duun plugins in the near future, but for now, feel free to take a look at `logger.js`… Methinks you don't need it copy-pasted into the readme! :P_

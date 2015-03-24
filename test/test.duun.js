@@ -2,7 +2,7 @@
 
 
 var assert = require( 'assert' );
-var duun = require( '../lib/duun' );
+var duun = require( '../duun' );
 
 
 describe( 'duun', function () {
