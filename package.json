@@ -17,11 +17,15 @@
   },
   "keywords": [
     "duun",
+    "dune",
+    "doon",
     "sandbox",
+    "web",
     "application",
-    "extensible",
+    "webapp",
     "decouple",
-    "components"
+    "components",
+    "extensible"
   ],
   "license": "GPLv2",
   "devDependencies": {
