@@ -1,5 +1,7 @@
 # Duun
 
+#  [![npm version](https://badge.fury.io/js/duun.svg)](http://badge.fury.io/js/duun) [![Build Status](https://travis-ci.org/mattlubner/duun.svg?branch=master)](https://travis-ci.org/mattlubner/duun)
+
     ``````````````````````````````````````````````````````````````````````````
     ``````````````````````````````````````````` ``````````````````````````````
     ``````````````````````````````````````.:,,,,.`````````````````````````````
