@@ -185,4 +185,4 @@ duun.register( 'logger', logger );
 
 
 ## Authoring Duun Plugins
-_Perhaps I'll write some docs on writing Duun plugins in the near future, but for now, feel free to take a look at `logger.js`… methinks you don't need it copy-pasted into the readme! :P_
+_Perhaps I'll write some docs on writing Duun plugins in the near future, but for now, feel free to take a look at `logger.js`! :P_
