@@ -1,10 +1,9 @@
 'use strict';
 
+
 var assert = require( 'assert' );
 var duun = require( '../lib/duun' );
 
-// TODO: test logger (will need a mock console)
-// var logger = require( '../lib/logger' );
 
 describe( 'duun', function () {
 
@@ -148,6 +147,61 @@ describe( 'duun', function () {
         assert.throws( function () {
           duun.register( 'anotherMockDuunPlugin', {} );
         }, Error );
+      } );
+
+      it( 'should create new instances of duuned plugins when a new duun is created', function () {
+        var anotherMockDuunedPlugin = {
+          duun: function () {
+            return [
+              'anotherMockDuunedFunction'
+            ];
+          },
+          duuned: function () {
+            return [];
+          },
+          create: function () {
+            return Object.create( anotherMockDuunedPlugin, {
+              random: { value: Math.random() }
+            } );
+          },
+          anotherMockDuunedFunction: function () {
+            return this.random;
+          }
+        };
+        duun.register( 'anotherMockDuunedPlugin', anotherMockDuunedPlugin );
+        var aDuun = duun.create( 'a duun' );
+        var anotherDuun = duun.create( 'another duun' );
+        assert.notEqual( aDuun.anotherMockDuunedFunction(), anotherDuun.anotherMockDuunedFunction() );
+      } );
+
+      it( 'should pass duuned properties to new instances of duuned plugins when a new duun is created', function () {
+        var mockDuunedPlugin = {
+          duun: function () {
+            return [
+              'aMockDuunedFunction'
+            ];
+          },
+          duuned: function () {
+            return [
+              'name'
+            ];
+          },
+          create: function ( name ) {
+            return Object.create( mockDuunedPlugin, {
+              name: { value: name }
+            } );
+          },
+          aMockDuunedFunction: function () {
+            return this.name;
+          }
+        };
+        var aMockDuunedPlugin = mockDuunedPlugin.create( 'a mock duuned plugin' );
+        assert.equal( 'a mock duuned plugin', aMockDuunedPlugin.aMockDuunedFunction() );
+        duun.register( 'mockDuunedPlugin', mockDuunedPlugin );
+        var aDuun = duun.create( 'a very special duun' );
+        assert.equal( 'a very special duun', aDuun.aMockDuunedFunction() );
+        var anotherDuun = duun.create( 'another very special duun' );
+        assert.equal( 'another very special duun', anotherDuun.aMockDuunedFunction() );
       } );
 
     } );// end of 'of duun plugins' description
