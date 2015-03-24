@@ -37,7 +37,7 @@ var duun = require( 'duun' ) // require the 'duun' module
 
 duun.log( 'hello world' );// prints 'app: hello world'
 
-// this works even if the browser doesn't have console.debug())
+// this works even if the browser doesn't have console.debug()
 duun.debug( 'hello world' );// prints 'app: hello world'
 
 duun.consoleDisable();// disables all logging
