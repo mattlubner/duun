@@ -27,7 +27,7 @@
     "components",
     "extensible"
   ],
-  "license": "GPLv2",
+  "license": "ISC",
   "devDependencies": {
     "mocha": "^2.2.1",
     "sinon": "^1.14.1"
