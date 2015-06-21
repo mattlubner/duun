@@ -42,7 +42,7 @@ mockConsole.resetSpies();
 
 
 var logger = require( '../logger' )( mockConsole );
-var duun = require( '../duun' );
+var Duun = require( '../duun' );
 
 
 describe( 'logger', function () {
@@ -184,17 +184,18 @@ describe( 'logger', function () {
   describe( 'while duuned', function () {
 
     it( 'should create a new instance of duun/logger when a new duun is created', function () {
+      var duun1 = Duun.create( 'a duun' );
       logger.consoleEnable();
-      var aLogger = logger.create( 'a logger' );
-      duun.register( 'logger', logger );
-      var aDuun = duun.create( 'a duun' );
-      aLogger.log( '' );
+      var logger1 = logger.create( 'a logger' );
+      duun1.register( logger1 );
+      var duun2 = duun1.create( 'another duun' );
+      logger1.log( '' );
       var aLoggerOutput = mockConsole.tail();
-      aDuun.log( '' );
+      duun2.log( '' );
       var aDuunOutput = mockConsole.tail();
       assert.notEqual( aLoggerOutput, aDuunOutput );
       assert.equal( 'a logger: ', aLoggerOutput );
-      assert.equal( 'a duun: ', aDuunOutput );
+      assert.equal( 'another duun: ', aDuunOutput );
     } );
 
   } );// end of 'while duuned' description

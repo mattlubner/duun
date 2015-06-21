@@ -30,24 +30,15 @@ function logger ( _console ) {
 
 
 
-logger.duun = function () {
-  // array of functions for duun to map to logger
-  return [
-    'log',
-    'debug',
-    'warn',
-    'error',
-    'consoleDisable',
-    'consoleEnable'
-  ];
-};
-
-logger.duuned = function () {
-  // array of arguments for duun to pass to logger.create()
-  return [
-    'name'
-  ];
-};
+Object.defineProperty( logger, 'duun', { value: {}, writable: true } );
+Object.defineProperty( logger.duun, 'methods', { value: [
+  'log',
+  'debug',
+  'warn',
+  'error',
+  'consoleDisable',
+  'consoleEnable',
+] } );
 
 
 
