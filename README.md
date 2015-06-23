@@ -21,6 +21,9 @@
 Duun is an extensible sandbox written in Javascript / CommonJS for decoupling web application components.
 
 
+> **_WARNING: This documentation is out-of-date! It will be updated ASAP, but until then, please look through the actual code and tests for examples of how to use the newly-refactored Duun! :D_**
+
+
 ## Duun Basics
 Duun is written in CommonJS, so be sure to use a bundler like [Webpack](http://webpack.github.io) or [Browserify](http://browserify.org) to get it into the browser! Although it will work just fine in a Node back-end as well.
 
