@@ -64,7 +64,7 @@ var app = module.exports = Duun.create( 'Roy' );
 app.proxy( eventEmitter, [ 'on', 'off', 'once', 'emit' ] );
 
 // proxy the entire moment() function onto "app" as app.moment()
-app.map( moment, { moment: moment } );
+app.proxy( moment, { moment: moment } );
 
 // proxy the superagent methods get(), head(), del(), patch(), post(), and
 // put() onto "app" as app.xhrGet(), app.xhrHead(), app.xhrDel(), 
@@ -72,7 +72,7 @@ app.map( moment, { moment: moment } );
 // superagent as the first parameter here, or Duun won't be able to preserve 
 // the context of the proxied methods ("this" is always set to the first 
 // parameter)!
-app.map( request, {
+app.proxy( request, {
   'xhrGet': request.get,
   'xhrHead': request.head,
   'xhrDel': request.del,
@@ -84,7 +84,7 @@ app.map( request, {
 // proxy the director methods dispatch(), setRoute(), and getRoute() onto 
 // "app" as app.reroute(), app.redirect(), and app.getCurrentRoute() -- note 
 // that router.dispatch() and app.reroute() take different arguments!
-app.map( router, {
+app.proxy( router, {
   reroute: function ( url ) { return router.dispatch( 'on', url ); },
   redirect: router.setRoute,
   getCurrentRoute: router.getRoute,
@@ -93,7 +93,7 @@ app.map( router, {
 // proxy the rsvp methods Promise(), all(), hash(), and defer() onto "app" as 
 // app.Promise(), app.all(), app.hash(), and app.defer() -- Duun can even 
 // proxy constructors without affecting their behavior!
-app.map( rsvp, [ 'Promise', 'all', 'hash', 'defer' ] );
+app.proxy( rsvp, [ 'Promise', 'all', 'hash', 'defer' ] );
 
 // by the way... duun has console-proxying methods built-in!
 app.log( 'Hello, IT.' );// -> Roy: Hello, IT.
