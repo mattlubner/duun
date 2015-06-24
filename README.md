@@ -18,176 +18,136 @@
     +++++++++++++++++++++++++++++++++''''''''''';;;:,,,,,,,,,,,,,,,,,,,,,,,,,,
     +++++++++'+'+''+'+++'+''''+'''''++'''''''''';';;;:,,,,,,,,,,,,,,,,,,,,,,,,
 
-Duun is an extensible sandbox written in Javascript / CommonJS for decoupling web application components.
+Duun is an extensible sandbox written in Javascript for decoupling web application components.
+
+Use a bundler like [Webpack](http://webpack.github.io) or [Browserify](http://browserify.org) to bring Duun to a browser near you!
 
 
-> **_WARNING: This documentation is out-of-date! It will be updated ASAP, but until then, please look through the actual code and tests for examples of how to use the newly-refactored Duun! :D_**
+## Description
+In a nutshell, Duun lets you reduce boilerplate code through creation of a single object that proxies the functionality of numerous distinct components (such as modules, packages, libraries, etc). This is done by registering a component and it's methods with a Duun object via `duun.proxy()`, which creates context-aware proxy methods on the Duun object itself that pass on invocations to the original component methods.
 
+## Installation
+Use [`npm`](http://npmjs.com/) to install Duun:
 
-## Duun Basics
-Duun is written in CommonJS, so be sure to use a bundler like [Webpack](http://webpack.github.io) or [Browserify](http://browserify.org) to get it into the browser! Although it will work just fine in a Node back-end as well.
-
-_**In a shell:**_
 ```sh
-$ npm install --save-dev duun
+# in a shell
+npm install --save-dev duun
 ```
 
-_**app/index.js:**_
+## Usage
 ```js
-var duun = require( 'duun' ) // require the 'duun' module
-  .create( 'app' ); // and name this 'duun' instance
+//////////////
+/// app.js ///
+//////////////
 
-// log(), debug(), warn(), and error() are all proxied to console,
-// window.console, or nothing if those are both undefined
+'use strict';
 
-duun.log( 'hello world' );// prints 'app: hello world'
-
-// this works even if the browser doesn't have console.debug()
-duun.debug( 'hello world' );// prints 'app: hello world'
-
-duun.consoleDisable();// disables all logging
-
-// this will do nothing while console is disabled
-duun.log( 'hello world' );// does nothing
-
-// register an ad-hoc function with the sandbox
-duun.register( {
-    awww: function () {
-      duun.log( 'yeah!!' );
-    }
-  } );
-
-// now you can call duun.awww() from anywhere!
-
-duun.awww();// prints 'app: yeah!!'
-
-// require another file for demonstration purposes...
-require( './awww' );
-```
-
-_**app/awww.js:**_
-```js
-var duun = require( 'duun' ) // require the 'duun' module
-  .create( 'awwwModule' ); // and name this 'duun' instance
-
-// this works so long as the awww function is registered before we got here
-duun.awww();// prints 'awwwModule: yeah!!'
-
-```
-
-
-## 1:1 Shimming
-Existing packages can be registered with duun by specifying which methods duun should proxy…
-
-_**example/app.js:**_
-```js
-var duun = require( 'duun' )
-  .create( 'example/app' );
-
-var ee = require( 'event-emitter' );
-var eventEmitter = ee( {} );
-
-duun.register( 'emitter', eventEmitter, [
-    'on',
-    'off',
-    'once',
-    'emit'
-  ] );
-
-// now call duun.on(), duun.off(), duun.once(), and duun.emit() from anywhere!
-
-duun.on( 'test', function ( payload ) {
-    duun.log( 'test event received!' );
-  } );
-
-require( './module' );
-```
-
-_**example/module.js:**_
-```js
-var duun = require( 'duun' )
-  .create( 'example/module' );
-
-duun.emit( 'test' );// prints 'example/app: test event received!'
-```
-
-
-## Complex Shimming
-Existing packages can also be registered with duun by specifying a map of duun method names -> plugin method names, or even by passing functions in directly…
-
-_**example2/app.js:**_
-```js
-var duun = require( 'duun' )
-  .create( 'example2/app' );
-
+// get some deps
 var director = require( 'director' );
-var routes = require( './routes' );
-var router = new director.Router(  );
+var Duun = require( 'duun' );
+var ee = require( 'event-emitter' );
+var moment = require( 'moment' );
+var request = require( 'superagent' );
+var rsvp = require( 'rsvp' );
 
-duun.register( 'router', router, {
-    reroute: function ( relativeUrl ) {
-      // use an ad-hoc function to adapt differing signatures
-      return router.dispatch( 'on', relativeUrl );
-    },
-    redirect: 'setRoute'
-  } );
+// do some 'nits
+var eventEmitter = ee( {} );
+var router = new director.Router( {/* app routes */} );
 
-// now call duun.reroute() and duun.redirect() from anywhere!
+// make a new Duun object which represents the common functionality that
+// should be available to all application components (this is kind of like 
+// a voluntary sandbox)
+var app = module.exports = Duun.create( 'Roy' );
 
-router.configure( {
-    notfound: function () {
-      duun.reroute( '/404' );
-    }
-  } );
+// proxy the event emitter methods on(), off(), once(), and emit() onto
+// "app" as app.on(), app.off(), app.once(), and app.emit()
+app.proxy( eventEmitter, [ 'on', 'off', 'once', 'emit' ] );
 
-router.init( '/' );// prints 'example2/routes: real home route!'
-duun.redirect( '/missing' );// prints 'example2/routes: route not found!'
+// proxy the entire moment() function onto "app" as app.moment()
+app.map( moment, { moment: moment } );
+
+// proxy the superagent methods get(), head(), del(), patch(), post(), and
+// put() onto "app" as app.xhrGet(), app.xhrHead(), app.xhrDel(), 
+// app.xhrPatch(), app.xhrPost(), and app.xhrPut() -- be sure to pass 
+// superagent as the first parameter here, or Duun won't be able to preserve 
+// the context of the proxied methods ("this" is always set to the first 
+// parameter)!
+app.map( request, {
+  'xhrGet': request.get,
+  'xhrHead': request.head,
+  'xhrDel': request.del,
+  'xhrPatch': request.patch,
+  'xhrPost': request.post,
+  'xhrPut': request.put,
+} );
+
+// proxy the director methods dispatch(), setRoute(), and getRoute() onto 
+// "app" as app.reroute(), app.redirect(), and app.getCurrentRoute() -- note 
+// that router.dispatch() and app.reroute() take different arguments!
+app.map( router, {
+  reroute: function ( url ) { return router.dispatch( 'on', url ); },
+  redirect: router.setRoute,
+  getCurrentRoute: router.getRoute,
+} );
+
+// proxy the rsvp methods Promise(), all(), hash(), and defer() onto "app" as 
+// app.Promise(), app.all(), app.hash(), and app.defer() -- Duun can even 
+// proxy constructors without affecting their behavior!
+app.map( rsvp, [ 'Promise', 'all', 'hash', 'defer' ] );
+
+// by the way... duun has console-proxying methods built-in!
+app.log( 'Hello, IT.' );// -> Roy: Hello, IT.
+app.debug( 'Have you tried turning it off and on again?' );// -> Roy: Have you tried turning it off and on again?
+app.warn( 'That\'d be trouser food!' );// -> Roy: That'd be trouser food!
+app.error( 'Hey! What is Jen doing with the Internet?' );// -> Roy: Hey! What is Jen doing with the Internet?
+app.consoleDisable();// disable logging
+app.log( '[meekly] I\'m disabled.' );// -> (crickets...)
+app.consoleEnable();// re-enable logging
+app.log( '...you do know how a button works don\'t you?' );// -> Roy: ...you do know how a button works don't you?
+
+// aside: you can get a "pure" Duun w/o these logger methods by requiring 
+// 'duun/duun' instead of just 'duun'
+
+// you can also proxy ad-hoc functions!
+var isConcussed = false;
+app.proxy( {
+  concuss: function ( message ) {
+    isConcussed = true;
+    app.log( message || 'Hello, Moss speaking!' );
+  }
+} );
+app.concuss();// -> Roy: Hello, Moss speaking!
 ```
 
-_**example2/routes.js:**_
 ```js
-var duun = require( 'duun' )
-  .create( 'example2/routes' );
+////////////////
+/// stuff.js ///
+////////////////
 
-var routes = {
-    '/': function () {
-      // this works because .reroute() is registered with duun before director
-      // is initialized and starts routing
-      duun.redirect( '/landing' );
-    },
-    '/landing': function () {
-      duun.log( 'real home route!' );
-    },
-    '/404': function () {
-      duun.log( 'route not found!' );
-    }
-  };
+'use strict';
 
-module.exports = routes;
+// you can "extend" a duun by creating a duun from another duun...
+var sandbox = require( './app' ).create( 'Yo Dawg' );
+
+// you still have access to all the stuff defined above...
+sandbox.log( 'We heard you like sandboxes' );// -> Yo Dawg: We heard you like sandboxes
+sandbox.concuss( 'So we put a sandbox in your sandbox...' );// -> Yo Dawg: So we put a sandbox in your sandbox...
+
+// if you're feeling particularly ambitious, you can proxy things onto your sandbox object, without affecting the app object (even if it hides a method of the same name)!
+var isVeryConcussed = false;
+app.proxy( {
+  concuss: function ( message ) {
+    isVeryConcussed = true;
+    app.log( message || 'So you can code while you code!' );
+  }
+} );
+sandbox.concuss();// -> Yo Dawg: So you can code while you code!
+
 ```
 
+## Plugins
+Duun plugins are just your regular variety non-gmo objects, except they have a `.duun` property that itself has a `.methods` array, so you don't have to do anything annoying like manually define a list of methods to proxy!
 
-## Using Duun Plugins
-Currently, the only Duun plugin available is `duun/logger`, which is already pre-bundled with Duun! But, since you made it this far and are thusly a curious one…
+Also, if a Duun plugin has a `.create()` method, Duun will invoke it with a `name` parameter and reregister the new instance whenever you extend a Duun! That's how the logger knows the name of its Duun object.
 
-_**example3/app.js:**_
-```js
-// get a logger-less duun…
-var duun = require( 'duun/duun' )
-  .create( 'example3/app' );
-
-// get a duun-less logger…
-var logger = require( 'duun/logger' );
-
-// duun/logger is a fancy-pants _duuned_ plugin, so not only does it tell
-// duun which methods to proxy (via logger.duun()), it also gets duun to pass
-// duun.name to its logger.create() factory (via logger.duuned()). Way rad!
-duun.register( 'logger', logger );
-
-// now call duun.log(), duun.debug(), duun.warn(), and duun.error() from
-// anywhere… just like before, but… exactly the same, actually!
-```
-
-
-## Authoring Duun Plugins
-_Perhaps I'll write some docs on writing Duun plugins in the near future, but for now, feel free to take a look at `logger.js`! :P_
+Currently, the only Duun plugin known to the world is `duun/logger`, which is automatically registered! But you know, no one said you can't make more…! ;P
