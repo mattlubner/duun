@@ -317,6 +317,15 @@ describe( 'Duun', function () {
     } );
   } );// '.register( fnMap )'
 
+  describe( '.proxy( fnMap )', function () {
+    var duun = Duun.create( 'global' );
+    it( 'should behave the same as .register( fnMap )', function () {
+      var duun1 = duun.create( name1 );
+      duun1.register( fnMap1 );
+      assertObjectHasMappedFunctions( duun1, fnMap1, rtnMap1 );
+    } );
+  } );// '.register( fnMap )'
+
   describe( '.register( plugin, fnNames )', function () {
     var duun = Duun.create( 'global' );
     it( 'should map only listed methods from another object onto the given Duun', function () {

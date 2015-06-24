@@ -67,7 +67,7 @@ function mapMethodOntoDuun( duunObject, pluginObject, methodName, methodFunction
 
 
 // map methods onto this duun object for later use
-Duun.prototype.register = function registerDuunMethods( pluginObject, proxyMap ) {
+Duun.prototype.proxy = Duun.prototype.register = function registerDuunMethods( pluginObject, proxyMap ) {
   if ( ! proxyMap && pluginObject.duun ) {
     // get designated Duun methods to map onto this Duun
     proxyMap = pluginObject.duun.methods;
