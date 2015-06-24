@@ -1,6 +1,6 @@
 {
   "name": "duun",
-  "version": "0.1.4",
+  "version": "0.2.0",
   "author": "Matt Lubner <matt@mattlubner.com>",
   "description": "Duun is an extensible sandbox for decoupling web application components.",
   "homepage": "https://github.com/mattlubner/duun",
