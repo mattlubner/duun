@@ -73,12 +73,12 @@ app.proxy( moment, { moment: moment } );
 // the context of the proxied methods ("this" is always set to the first 
 // parameter)!
 app.proxy( request, {
-  'xhrGet': request.get,
-  'xhrHead': request.head,
-  'xhrDel': request.del,
-  'xhrPatch': request.patch,
-  'xhrPost': request.post,
-  'xhrPut': request.put,
+  xhrGet: request.get,
+  xhrHead: request.head,
+  xhrDel: request.del,
+  xhrPatch: request.patch,
+  xhrPost: request.post,
+  xhrPut: request.put,
 } );
 
 // proxy the director methods dispatch(), setRoute(), and getRoute() onto 
