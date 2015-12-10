@@ -1,6 +1,6 @@
 'use strict';
 
-var duun = require( './duun' );
+var duun = require( './duun' ).create( 'index' );
 var logger = require( './logger' );
 
 // pre-register built-in 'logger' plugin
