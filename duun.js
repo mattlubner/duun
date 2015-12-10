@@ -4,7 +4,6 @@
 
 function Duun( name ) {
   Object.defineProperty( this, 'name', { value: name, enumerable: true } );
-
   var _numPlugins = 0;
   var _plugins = {};
   var plugin;
@@ -19,10 +18,12 @@ function Duun( name ) {
   Object.defineProperty( this, 'plugins', { value: _plugins, writable: true } );
 }
 
+Object.defineProperty( Duun, 'numPlugins', { value: 0, writable: true } );
+Object.defineProperty( Duun, 'plugins', { value: [], writable: true } );
 
 
 // duun object factory
-Duun.create = Duun.prototype.create = function duunFactory() {
+Duun.prototype.create = Duun.create = function () {
   var duun = Object.create( this.prototype || this );
   Duun.apply( duun, arguments );
   return duun;
@@ -67,7 +68,7 @@ function mapMethodOntoDuun( duunObject, pluginObject, methodName, methodFunction
 
 
 // map methods onto this duun object for later use
-Duun.prototype.proxy = Duun.prototype.register = function registerDuunMethods( pluginObject, proxyMap ) {
+Duun.registerCorePlugin = Duun.prototype.proxy = Duun.prototype.register = function registerDuunMethods( pluginObject, proxyMap ) {
   if ( ! proxyMap && pluginObject.duun ) {
     // get designated Duun methods to map onto this Duun
     proxyMap = pluginObject.duun.methods;

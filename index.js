@@ -1,9 +1,8 @@
 'use strict';
 
-var duun = require( './duun' ).create( 'index' );
+var Duun = module.exports = exports = require( './duun' );
+
 var logger = require( './logger' );
+Duun.registerCorePlugin( logger );
 
-// pre-register built-in 'logger' plugin
-duun.register( logger );
-
-module.exports = duun;
+delete Duun.registerCorePlugin;
