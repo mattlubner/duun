@@ -1,39 +1,20 @@
+/**
+ * Duun provides a way to combine multiple dependencies into a single exposed
+ * object, to ease management of dependencies (and their injection) across
+ * large applications.
+ */
+
 'use strict';
 
-
-
-function Duun( name ) {
-  Object.defineProperty( this, 'name', { value: name, enumerable: true } );
-  var _numPlugins = 0;
-  var _plugins = {};
-  var plugin;
-  if ( this.plugins && this.numPlugins ) {
-    for ( _numPlugins = 0; _numPlugins < this.numPlugins; _numPlugins++ ) {
-      plugin = this.plugins[ _numPlugins ].create( this.name );
-      Object.defineProperty( _plugins, _numPlugins, { value: plugin } );
-      this.register( plugin, plugin.duun.methods );
-    }
-  }
-  Object.defineProperty( this, 'numPlugins', { value: _numPlugins, writable: true } );
-  Object.defineProperty( this, 'plugins', { value: _plugins, writable: true } );
-}
-
-Object.defineProperty( Duun, 'numPlugins', { value: 0, writable: true } );
-Object.defineProperty( Duun, 'plugins', { value: [], writable: true } );
-
-
-// duun object factory
-Duun.prototype.create = Duun.create = function () {
-  var duun = Object.create( this.prototype || this );
-  Duun.apply( duun, arguments );
-  return duun;
-};
-
-
-
-// return a function which proxies the given method, intelligently passing
-// either the plugin object or the newly-constructed object, depending on
-// whether or not the returned function was invoked with the "new" keyword
+/**
+ * Generate a function which proxies the given method, intelligently passing
+ * either the plugin object or the newly-constructed object, depending on
+ * whether or not the returned function was invoked with the "new" keyword.
+ * @arg  {Duun}  duunObject  Not so secretly totally unused bro...
+ * @arg  {Object}  pluginObject
+ * @arg  {Function}  methodFunction
+ * @return  {Function}
+ */
 function generateProxyMethod( duunObject, pluginObject, methodFunction ) {
   function ProxyMethod() {
     // was this function invoked with the "new" keyword?
@@ -51,9 +32,14 @@ function generateProxyMethod( duunObject, pluginObject, methodFunction ) {
   return ProxyMethod;
 }
 
-
-
-// proxies onto a given duun object a given (plugin) method by name or reference
+/**
+ * Proxies onto a Duun a given (plugin) method, either by name or reference.
+ * @arg  {Duun}  duunObject
+ * @arg  {Object}  pluginObject
+ * @arg  {String}  methodName
+ * @arg  {Function}  methodFunction
+ * @void
+ */
 function mapMethodOntoDuun( duunObject, pluginObject, methodName, methodFunction ) {
   if ( duunObject.hasOwnProperty( methodName ) ) {
     throw new Error( 'The method "' + methodName + '" has already been registered and cannot be overridden!' );
@@ -65,9 +51,55 @@ function mapMethodOntoDuun( duunObject, pluginObject, methodName, methodFunction
   duunObject[ methodName ] = generateProxyMethod( duunObject, pluginObject, methodFunction );
 }
 
+/**
+ * Duun constructor
+ * @arg  {String}  name
+ * @constructor
+ */
+function Duun( name ) {
+  Object.defineProperty( this, 'name', { value: name, enumerable: true } );
+  var _numPlugins = 0;
+  var _plugins = {};
+  var plugin;
+  if ( this.plugins && this.numPlugins ) {
+    for ( _numPlugins = 0; _numPlugins < this.numPlugins; _numPlugins++ ) {
+      plugin = this.plugins[ _numPlugins ].create( this.name );
+      Object.defineProperty( _plugins, _numPlugins, { value: plugin } );
+      this.register( plugin, plugin.duun.methods );
+    }
+  }
+  Object.defineProperty( this, 'numPlugins', { value: _numPlugins, writable: true } );
+  Object.defineProperty( this, 'plugins', { value: _plugins, writable: true } );
+}
 
+/**
+ * Number of registered core plugins
+ * @type  {Number}
+ */
+Object.defineProperty( Duun, 'numPlugins', { value: 0, writable: true } );
 
-// map methods onto this duun object for later use
+/**
+ * Registered core plugins
+ * @type  {Array}
+ */
+Object.defineProperty( Duun, 'plugins', { value: [], writable: true } );
+
+/**
+ * Duun factory function
+ * @return  {Duun}
+ */
+Duun.prototype.create = Duun.create = function () {
+  var duun = Object.create( this.prototype || this );
+  Duun.apply( duun, arguments );
+  return duun;
+};
+
+/**
+ * Map methods onto this Duun object for later use.
+ * @arg  {Object}  pluginObject
+ * @arg  {Object}  [proxyMap]
+ * @void
+ */
 Duun.registerCorePlugin = Duun.prototype.proxy = Duun.prototype.register = function registerDuunMethods( pluginObject, proxyMap ) {
   if ( ! proxyMap && pluginObject.duun ) {
     // get designated Duun methods to map onto this Duun
@@ -106,7 +138,5 @@ Duun.registerCorePlugin = Duun.prototype.proxy = Duun.prototype.register = funct
     }
   }
 };
-
-
 
 module.exports = Duun;
