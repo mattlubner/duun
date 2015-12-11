@@ -10,12 +10,11 @@
  * Generate a function which proxies the given method, intelligently passing
  * either the plugin object or the newly-constructed object, depending on
  * whether or not the returned function was invoked with the "new" keyword.
- * @arg  {Duun}  duunObject  Not so secretly totally unused bro...
  * @arg  {Object}  pluginObject
  * @arg  {Function}  methodFunction
  * @return  {Function}
  */
-function generateProxyMethod( duunObject, pluginObject, methodFunction ) {
+function generateProxyMethod( pluginObject, methodFunction ) {
   function ProxyMethod() {
     // was this function invoked with the "new" keyword?
     if ( this instanceof ProxyMethod ) {
@@ -48,7 +47,7 @@ function mapMethodOntoDuun( duunObject, pluginObject, methodName, methodFunction
     // silently skip any non-function properties! :P
     return;
   }
-  duunObject[ methodName ] = generateProxyMethod( duunObject, pluginObject, methodFunction );
+  duunObject[ methodName ] = generateProxyMethod( pluginObject, methodFunction );
 }
 
 /**
