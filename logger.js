@@ -114,7 +114,7 @@ Logger.inject = function ( dependencies ) {
  * Duuned plugin methods.
  * @type {Array}
  */
-Object.defineProperty( Logger, 'duun', {
+Object.defineProperty( Logger.prototype, 'duun', {
   value: Object.create( null, {
     methods: {
       value: [

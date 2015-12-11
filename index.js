@@ -2,8 +2,8 @@
 
 var Duun = module.exports = exports = require( './duun' );
 
-var logger = require( './logger' );
-Duun.registerCorePlugin( logger );
+var Logger = require( './logger' );
+Duun.registerCorePlugin( Logger );
 
 var Manager = require( './manager' );
 Duun.registerCorePlugin( Manager );

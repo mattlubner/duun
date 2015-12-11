@@ -55,7 +55,7 @@ Manager.prototype.getInstance = function ( name ) {
  * Duuned plugin methods.
  * @type {Array}
  */
-Object.defineProperty( Manager, 'duun', {
+Object.defineProperty( Manager.prototype, 'duun', {
   value: Object.create( null, {
     methods: {
       value: [

@@ -75,21 +75,22 @@ function Duun( name ) {
  * Number of registered core plugins
  * @type  {Number}
  */
-Object.defineProperty( Duun, 'numPlugins', { value: 0, writable: true } );
+Object.defineProperty( Duun.prototype, 'numPlugins', { value: 0, writable: true } );
 
 /**
  * Registered core plugins
  * @type  {Array}
  */
-Object.defineProperty( Duun, 'plugins', { value: [], writable: true } );
+Object.defineProperty( Duun.prototype, 'plugins', { value: [], writable: true } );
 
 /**
- * Duun factory function
+ * Sub-Duun factory function
+ * @arg  {String}  name
  * @return  {Duun}
  */
-Duun.prototype.create = Duun.create = function () {
-  var duun = Object.create( this.prototype || this );
-  Duun.apply( duun, arguments );
+Duun.prototype.create = function ( name ) {
+  var duun = Object.create( this );
+  Duun.call( duun, name );
   return duun;
 };
 
@@ -99,12 +100,25 @@ Duun.prototype.create = Duun.create = function () {
  * @arg  {Object}  [proxyMap]
  * @void
  */
-Duun.registerCorePlugin = Duun.prototype.proxy = Duun.prototype.register = function registerDuunMethods( pluginObject, proxyMap ) {
-  if ( ! proxyMap && pluginObject.duun ) {
-    // get designated Duun methods to map onto this Duun
-    proxyMap = pluginObject.duun.methods;
+Duun.prototype.proxy = Duun.prototype.register = function ( pluginObject, proxyMap ) {
+  if ( ! pluginObject ) {
+    throw new Error( 'At least one argument is required!' );
+  }
 
-    if ( typeof pluginObject.create === 'function' ) {
+  // check for 'duun' property on pluginObject when no proxyMap is passed
+  if ( ! proxyMap ) {
+    if ( pluginObject.duun ) {
+      proxyMap = pluginObject.duun.methods;
+
+    // check explicitly for 'duun' property on prototype, to support use of
+    // Duun.registerCorePlugin()
+    } else if ( pluginObject.prototype && pluginObject.prototype.duun ) {
+      proxyMap = pluginObject.prototype.duun.methods;
+    }
+
+    // if duun.methods was found and pluginObject has a create() function,
+    // invoke it!
+    if ( proxyMap && typeof pluginObject.create === 'function' ) {
       pluginObject = pluginObject.create( this.name );
       Object.defineProperty( this.plugins, this.numPlugins++, { value: pluginObject } );
     }
@@ -136,6 +150,24 @@ Duun.registerCorePlugin = Duun.prototype.proxy = Duun.prototype.register = funct
       mapMethodOntoDuun( this, pluginObject, methodName, proxyMap[ methodName ] );
     }
   }
+};
+
+/**
+ * Duun factory function
+ * @arg  {String}  name
+ * @return  {Duun}
+ */
+Duun.create = function ( name ) {
+  return Duun.prototype.create.call( Duun.prototype, name );
+};
+
+/**
+ * Map methods onto the top-level Duun prototype for later use.
+ * @arg  {Object}  Plugin
+ * @void
+ */
+Duun.registerCorePlugin = function ( Plugin ) {
+  return Duun.prototype.proxy.call( Duun.prototype, Plugin );
 };
 
 module.exports = Duun;
