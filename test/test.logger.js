@@ -3,43 +3,7 @@
 
 
 var assert = require( 'assert' );
-var sinon = require( 'sinon' );
-
-
-var mockConsole = {
-  history: [],
-  logSpy: sinon.spy(),
-  log: function () {
-    this.history.push( Array.prototype.slice.call( arguments ) );
-    this.logSpy();
-  },
-  debugSpy: sinon.spy(),
-  debug: function () {
-    this.history.push( Array.prototype.slice.call( arguments ) );
-    this.debugSpy();
-  },
-  warnSpy: sinon.spy(),
-  warn: function () {
-    this.history.push( Array.prototype.slice.call( arguments ) );
-    this.warnSpy();
-  },
-  errorSpy: sinon.spy(),
-  error: function () {
-    this.history.push( Array.prototype.slice.call( arguments ) );
-    this.errorSpy();
-  },
-  tail: function () {
-    return this.history.slice( -1 ).pop();
-  },
-  resetSpies: function () {
-    this.logSpy.reset();
-    this.debugSpy.reset();
-    this.warnSpy.reset();
-    this.errorSpy.reset();
-  }
-};
-
-mockConsole.resetSpies();
+var mockConsole = require( './mock.console' );
 
 
 var logger = require( '../logger' )( mockConsole );
