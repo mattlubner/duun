@@ -5,9 +5,12 @@
 var assert = require( 'assert' );
 var mockConsole = require( './mock.console' );
 
-
-var logger = require( '../logger' )( mockConsole );
+var Logger = require( '../logger' );
 var Duun = require( '../duun' );
+
+Logger.inject( {
+  console: mockConsole
+} );
 
 
 describe( 'logger', function () {
@@ -16,9 +19,8 @@ describe( 'logger', function () {
   describe( 'creation', function () {
 
     it( 'should prepend all log() calls with its instance\'s name', function () {
-      logger.consoleEnable();
-      var aLogger = logger.create( 'a logger' );
-      var anotherLogger = logger.create( 'another logger' );
+      var aLogger = Logger.create( 'a logger' );
+      var anotherLogger = Logger.create( 'another logger' );
       aLogger.log( 'a message to log' );
       var aLoggerOutput = mockConsole.tail();
       anotherLogger.log( 'a message to log' );
@@ -28,9 +30,8 @@ describe( 'logger', function () {
     } );
 
     it( 'should prepend all debug() calls with its instance\'s name', function () {
-      logger.consoleEnable();
-      var aLogger = logger.create( 'a logger' );
-      var anotherLogger = logger.create( 'another logger' );
+      var aLogger = Logger.create( 'a logger' );
+      var anotherLogger = Logger.create( 'another logger' );
       aLogger.debug( 'a message to debug' );
       var aLoggerOutput = mockConsole.tail();
       anotherLogger.debug( 'a message to debug' );
@@ -40,9 +41,8 @@ describe( 'logger', function () {
     } );
 
     it( 'should prepend all warn() calls with its instance\'s name', function () {
-      logger.consoleEnable();
-      var aLogger = logger.create( 'a logger' );
-      var anotherLogger = logger.create( 'another logger' );
+      var aLogger = Logger.create( 'a logger' );
+      var anotherLogger = Logger.create( 'another logger' );
       aLogger.warn( 'a message to warn' );
       var aLoggerOutput = mockConsole.tail();
       anotherLogger.warn( 'a message to warn' );
@@ -52,9 +52,8 @@ describe( 'logger', function () {
     } );
 
     it( 'should prepend all error() calls with its instance\'s name', function () {
-      logger.consoleEnable();
-      var aLogger = logger.create( 'a logger' );
-      var anotherLogger = logger.create( 'another logger' );
+      var aLogger = Logger.create( 'a logger' );
+      var anotherLogger = Logger.create( 'another logger' );
       aLogger.error( 'a message to error' );
       var aLoggerOutput = mockConsole.tail();
       anotherLogger.error( 'a message to error' );
@@ -72,33 +71,29 @@ describe( 'logger', function () {
     describe( 'while enabled', function () {
 
       it( 'should proxy log() calls to the console', function () {
-        logger.consoleEnable();
         mockConsole.resetSpies();
-        var aLogger = logger.create( 'a logger' );
+        var aLogger = Logger.create( 'a logger' );
         aLogger.log( 'a message to log' );
         assert( mockConsole.logSpy.calledOnce );
       } );
 
       it( 'should proxy debug() calls to the console', function () {
-        logger.consoleEnable();
         mockConsole.resetSpies();
-        var aLogger = logger.create( 'a logger' );
+        var aLogger = Logger.create( 'a logger' );
         aLogger.debug( 'a message to debug' );
         assert( mockConsole.debugSpy.calledOnce );
       } );
 
       it( 'should proxy warn() calls to the console', function () {
-        logger.consoleEnable();
         mockConsole.resetSpies();
-        var aLogger = logger.create( 'a logger' );
+        var aLogger = Logger.create( 'a logger' );
         aLogger.warn( 'a message to warn' );
         assert( mockConsole.warnSpy.calledOnce );
       } );
 
       it( 'should proxy error() calls to the console', function () {
-        logger.consoleEnable();
         mockConsole.resetSpies();
-        var aLogger = logger.create( 'a logger' );
+        var aLogger = Logger.create( 'a logger' );
         aLogger.error( 'a message to error' );
         assert( mockConsole.errorSpy.calledOnce );
       } );
@@ -109,38 +104,55 @@ describe( 'logger', function () {
     describe( 'while disabled', function () {
 
       it( 'should not proxy log() calls to the console', function () {
-        logger.consoleDisable();
         mockConsole.resetSpies();
-        var aLogger = logger.create( 'a logger' );
+        Logger.consoleDisable();
+        var aLogger = Logger.create( 'a logger' );
         aLogger.log( 'a message to log' );
         assert.equal( 0, mockConsole.logSpy.callCount );
+        Logger.consoleEnable();
       } );
 
       it( 'should not proxy debug() calls to the console', function () {
-        logger.consoleDisable();
         mockConsole.resetSpies();
-        var aLogger = logger.create( 'a logger' );
+        Logger.consoleDisable();
+        var aLogger = Logger.create( 'a logger' );
         aLogger.debug( 'a message to debug' );
         assert.equal( 0, mockConsole.debugSpy.callCount );
+        Logger.consoleEnable();
       } );
 
       it( 'should not proxy warn() calls to the console', function () {
-        logger.consoleDisable();
         mockConsole.resetSpies();
-        var aLogger = logger.create( 'a logger' );
+        Logger.consoleDisable();
+        var aLogger = Logger.create( 'a logger' );
         aLogger.warn( 'a message to warn' );
         assert.equal( 0, mockConsole.warnSpy.callCount );
+        Logger.consoleEnable();
       } );
 
       it( 'should not proxy error() calls to the console', function () {
-        logger.consoleDisable();
         mockConsole.resetSpies();
-        var aLogger = logger.create( 'a logger' );
+        Logger.consoleDisable();
+        var aLogger = Logger.create( 'a logger' );
         aLogger.error( 'a message to error' );
         assert.equal( 0, mockConsole.errorSpy.callCount );
+        Logger.consoleEnable();
       } );
 
     } );// end of 'while disabled' description
+
+    describe( 'while disabled globally', function () {
+
+      it( 'should not proxy log() calls to the console', function () {
+        mockConsole.resetSpies();
+        Logger.consoleDisable();
+        var aLogger = Logger.create( 'a logger' );
+        aLogger.log( 'a message to log' );
+        assert.equal( 0, mockConsole.logSpy.callCount );
+        Logger.consoleEnable();
+      } );
+
+    } );// end of 'while disabled globally' description
 
 
   } );// end of 'proxying' description
@@ -150,8 +162,7 @@ describe( 'logger', function () {
 
     it( 'should create a new instance of duun/logger when a new duun is created', function () {
       var duun1 = Duun.create( 'a duun' );
-      logger.consoleEnable();
-      var logger1 = logger.create( 'a logger' );
+      var logger1 = Logger.create( 'a logger' );
       duun1.register( logger1 );
       var duun2 = duun1.create( 'another duun' );
       logger1.log( '' );

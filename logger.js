@@ -1,49 +1,67 @@
 /* global console: true, window: true */
 'use strict';
 
+/**
+ * The globally-detected console for this JavaScript environment.
+ * @type {Object}
+ */
+var globalConsole = ( function () {
+  if ( typeof window !== 'undefined' ) {
+    return window.console || null;
+  }
+  return console || null;
+} )();
 
+/**
+ * The currently-active console for this module.
+ * @type {Object}
+ */
+var activeConsole = globalConsole;
 
-function noop () {}
+/**
+ * Noop
+ * @void
+ */
+function noop() {}
 
-function proxyWrite ( outputFn ) {
+/**
+ * Write output using the passed output function.
+ * @arg  {Function}  outputFn
+ * @void
+ */
+function proxyWrite( outputFn ) {
   return function () {
     return this.write.call( this, outputFn, arguments );
   };
 }
 
-// duun prototypical object
-// NOTE: this is NOT a constructor; for module-level dependency injection!
-function logger ( _console ) {
-  // get a console
-  if ( _console ) {
-    logger.console = _console;
-  } else if ( 'undefined' !== typeof window ) {
-    logger.console = window.console || {};
-  } else {
-    logger.console = console || {};
-  }
-  // configure the console methods
-  logger.consoleEnable();
-  // return the module's export (which is logger)
-  return logger;
+/**
+ * Logger constructor
+ * @arg  {String}  name
+ * @constructor
+ */
+function Logger( name ) {
+  Object.defineProperty( this, 'name', { value: name } );
 }
 
+/**
+ * Logger factory function
+ * @return  {Logger}
+ */
+Logger.prototype.create = Logger.create = function () {
+  var instance = Object.create( this.prototype || this );
+  Logger.apply( instance, arguments );
+  return instance;
+};
 
-
-Object.defineProperty( logger, 'duun', { value: {}, writable: true } );
-Object.defineProperty( logger.duun, 'methods', { value: [
-  'log',
-  'debug',
-  'warn',
-  'error',
-  'consoleDisable',
-  'consoleEnable',
-] } );
-
-
-
-logger.write = function ( outputFn, args ) {
-  if ( 'string' === typeof args[ 0 ] ) {
+/**
+ * Write output to the console using the given output function.
+ * @arg  {Function}  outputFn
+ * @arg  {Mixed}  args
+ * @void
+ */
+Logger.prototype.write = function ( outputFn, args ) {
+  if ( typeof args[ 0 ] === 'string' ) {
     // first arg is a string, so simply prepend it with 'name: '
     args[ 0 ] = this.name + ': ' + args[ 0 ];// jshint ignore:line
   } else {
@@ -51,32 +69,67 @@ logger.write = function ( outputFn, args ) {
     args = Array.prototype.slice.call( args );
     args.unshift( this.name + ':' );// jshint ignore:line
   }
-  return outputFn.apply( logger.console, args );
+  return outputFn.apply( activeConsole, args );
 };
 
-logger.consoleDisable = function () {
-  logger.log   = noop;
-  logger.debug = noop;
-  logger.warn  = noop;
-  logger.error = noop;
+/**
+ * Map output functions to noop.
+ * @void
+ */
+Logger.prototype.consoleDisable = Logger.consoleDisable = function () {
+  Logger.prototype.log = noop;
+  Logger.prototype.warn = noop;
+  Logger.prototype.error = noop;
+  Logger.prototype.debug = noop;
 };
 
-logger.consoleEnable = function () {
-  logger.log   = proxyWrite( logger.console.log   || noop );
-  logger.debug = proxyWrite( logger.console.debug || noop );
-  logger.warn  = proxyWrite( logger.console.warn  || noop );
-  logger.error = proxyWrite( logger.console.error || noop );
+/**
+ * Map output functions to the active console's equivalent functions.
+ * @void
+ */
+Logger.prototype.consoleEnable = Logger.consoleEnable = function () {
+  Logger.prototype.log = proxyWrite( activeConsole.log || noop );
+  Logger.prototype.warn = proxyWrite( activeConsole.warn || noop );
+  Logger.prototype.error = proxyWrite( activeConsole.error || noop );
+  Logger.prototype.debug = proxyWrite( activeConsole.debug || noop );
 };
 
-
-
-logger.create = function ( name ) {
-  return Object.create( logger, {
-      name: { value: name },
-      console: { value: undefined }
-    } );
+/**
+ * Dependency-inject a console (for testing).
+ * @arg  {Object}  console
+ * @void
+ */
+Logger.inject = function ( dependencies ) {
+  if ( dependencies.console ) {
+    activeConsole = dependencies.console || globalConsole;
+    if ( Logger.prototype.log === noop ) {
+      Logger.consoleDisable();
+    } else {
+      Logger.consoleEnable();
+    }
+  }
 };
 
+/**
+ * Duuned plugin methods.
+ * @type {Array}
+ */
+Object.defineProperty( Logger, 'duun', {
+  value: Object.create( null, {
+    methods: {
+      value: [
+        'log',
+        'debug',
+        'warn',
+        'error',
+        'consoleDisable',
+        'consoleEnable'
+      ]
+    }
+  } )
+} );
 
+// Start module w/ enabled console
+Logger.consoleEnable();
 
-module.exports = logger();
+module.exports = Logger;
