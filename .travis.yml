@@ -10,5 +10,7 @@ deploy:
   api_key:
     secure: "$NPM_SECURED_TOKEN"
   on:
+    repo: mattlubner/duun
+    branch: master
     tags: true
-    condition: TRAVIS_NODE_VERSION == 0.12
+    node: '0.12'
