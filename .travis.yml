@@ -1,15 +1,14 @@
 language: node_js
-
 node_js:
-  - "5.3"
-  - "4.2"
-  - "0.12"
-  - "0.10"
-
+- '5.3'
+- '4.2'
+- '0.12'
+- '0.10'
 deploy:
   provider: npm
-  email: $NPM_EMAIL
-  api_key: $NPM_TOKEN
+  email: "$NPM_EMAIL"
+  api_key:
+    secure: "$NPM_SECURED_TOKEN"
   on:
     tags: true
     condition: TRAVIS_NODE_VERSION == 0.12
