@@ -31,11 +31,16 @@
   "license": "ISC",
   "devDependencies": {
     "chai": "^3.0.0",
+    "director": "^1.2.8",
+    "event-emitter": "^0.3.4",
     "gulp": "^3.9.0",
     "gulp-ejs": "^1.2.2",
     "gulp-rename": "^1.2.2",
     "gulp-replace": "^0.5.4",
     "mocha": "^2.2.1",
-    "sinon": "^1.14.1"
+    "moment": "^2.11.1",
+    "rsvp": "^3.1.0",
+    "sinon": "^1.14.1",
+    "superagent": "^1.6.1"
   }
 }
