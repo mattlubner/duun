@@ -18,6 +18,8 @@ describe( 'index', function () {
     console: mockConsole
   } );
 
+  var index = Index.create( 'global' );
+
   // check if duun instance is properly initiated
   describe( 'duun', function () {
     it( 'should remain uninitialized', function () {
@@ -29,12 +31,20 @@ describe( 'index', function () {
       assert.isUndefined( Index.register );
       assert.isUndefined( Index.registerCorePlugin );
     } );
+    it( 'should retain create() factory function after initialization', function () {
+      assert.isNotFunction( index );
+      assert.instanceOf( index, Duun );
+      assert.isFunction( index.create );
+      assert.isDefined( index.proxy );
+      assert.isDefined( index.register );
+      assert.isUndefined( index.registerCorePlugin );
+    } );
   } );
 
   // check that logger is properly registered
   describe( 'logger', function () {
     it( 'should have all mapped functions', function () {
-      Logger.duun.methods.forEach( function ( methodName ) {
+      Logger.prototype.duun.methods.forEach( function ( methodName ) {
         assert.property( Index, methodName );
         assert.isFunction( Index[ methodName ] );
       } );
@@ -58,7 +68,7 @@ describe( 'index', function () {
   // check that manager is properly registered
   describe( 'manager', function () {
     it( 'should have all mapped functions', function () {
-      Manager.duun.methods.forEach( function ( methodName ) {
+      Manager.prototype.duun.methods.forEach( function ( methodName ) {
         assert.property( Index, methodName );
         assert.isFunction( Index[ methodName ] );
       } );
