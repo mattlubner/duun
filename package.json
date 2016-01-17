@@ -30,6 +30,10 @@
   "license": "ISC",
   "devDependencies": {
     "chai": "^3.0.0",
+    "gulp": "^3.9.0",
+    "gulp-ejs": "^1.2.2",
+    "gulp-rename": "^1.2.2",
+    "gulp-replace": "^0.5.4",
     "mocha": "^2.2.1",
     "sinon": "^1.14.1"
   }

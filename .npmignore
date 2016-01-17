@@ -1,3 +1,7 @@
-.git
 .DS_Store
+.git
+.gitignore
 .jshintrc
+.travis.yml
+gulpfile.js
+README.md.ejs
