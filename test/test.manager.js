@@ -56,7 +56,7 @@ describe( 'manager', function () {
   describe( 'duun plugin', function () {
     it( 'should have all mapped functions', function () {
       var Index = require( '../' );
-      Manager.duun.methods.forEach( function ( methodName ) {
+      Manager.prototype.duun.methods.forEach( function ( methodName ) {
         assert.property( Index, methodName );
         assert.isFunction( Index[ methodName ] );
       } );
