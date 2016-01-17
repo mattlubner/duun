@@ -142,7 +142,7 @@ app.concuss();// -> Roy: Hello, Moss speaking!
 'use strict';
 
 // you can "extend" a duun by creating a duun from another duun...
-var sandbox = require( './app.1' ).create( 'Yo Dawg' );
+var sandbox = require( './app' ).create( 'Yo Dawg' );
 
 // you still have access to all the stuff defined above...
 sandbox.log( 'We heard you like sandboxes' );// -> Yo Dawg: We heard you like sandboxes
@@ -153,7 +153,7 @@ sandbox.proxy( {
   isVeryConcussed: false,
   concuss: function ( message ) {
     this.isVeryConcussed = true;
-    this.log( message || 'So you can code while you code!' );
+    sandbox.log( message || 'So you can code while you code!' );
   }
 } );
 sandbox.concuss();// -> Yo Dawg: So you can code while you code!

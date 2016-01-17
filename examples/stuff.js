@@ -12,7 +12,7 @@ sandbox.proxy( {
   isVeryConcussed: false,
   concuss: function ( message ) {
     this.isVeryConcussed = true;
-    this.log( message || 'So you can code while you code!' );
+    sandbox.log( message || 'So you can code while you code!' );
   }
 } );
 sandbox.concuss();// -> Yo Dawg: So you can code while you code!
