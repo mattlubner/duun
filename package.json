@@ -6,6 +6,7 @@
   "homepage": "https://github.com/mattlubner/duun",
   "main": "index.js",
   "scripts": {
+    "mocha": "mocha",
     "test": "mocha test/test.*.js"
   },
   "repository": {
