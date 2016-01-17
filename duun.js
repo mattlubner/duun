@@ -75,12 +75,14 @@ function Duun( name ) {
  * Number of registered core plugins
  * @type  {Number}
  */
+Object.defineProperty( Duun, 'numPlugins', { value: 0, writable: true } );
 Object.defineProperty( Duun.prototype, 'numPlugins', { value: 0, writable: true } );
 
 /**
  * Registered core plugins
  * @type  {Array}
  */
+Object.defineProperty( Duun, 'plugins', { value: [], writable: true } );
 Object.defineProperty( Duun.prototype, 'plugins', { value: [], writable: true } );
 
 /**
@@ -167,7 +169,8 @@ Duun.create = function ( name ) {
  * @void
  */
 Duun.registerCorePlugin = function ( Plugin ) {
-  return Duun.prototype.proxy.call( Duun.prototype, Plugin );
+  Duun.prototype.proxy.call( Duun, Plugin );
+  Duun.prototype.proxy.call( Duun.prototype, Plugin );
 };
 
 module.exports = Duun;
