@@ -5,9 +5,9 @@
 var assert = require( 'assert' );
 
 
-describe( 'readme examples', function () {
+describe( 'readme', function () {
 
-  describe( 'first example', function () {
+  describe( 'first example (app.js)', function () {
     it( 'should execute without throwing any exceptions', function () {
       assert.doesNotThrow( function () {
         require( '../examples/app.js' );
@@ -15,7 +15,7 @@ describe( 'readme examples', function () {
     } );
   } );
 
-  describe( 'second example', function () {
+  describe( 'second example (stuff.js)', function () {
     it( 'should execute without throwing any exceptions', function () {
       assert.doesNotThrow( function () {
         require( '../examples/stuff.js' );
@@ -23,7 +23,7 @@ describe( 'readme examples', function () {
     } );
   } );
 
-  describe( 'third example', function () {
+  describe( 'third example (app-alt.js)', function () {
     it( 'should execute without throwing any exceptions', function () {
       assert.doesNotThrow( function () {
         require( '../examples/app-alt.js' );
@@ -31,7 +31,7 @@ describe( 'readme examples', function () {
     } );
   } );
 
-  describe( 'fourth example', function () {
+  describe( 'fourth example (stuff-alt.js)', function () {
     it( 'should execute without throwing any exceptions', function () {
       assert.doesNotThrow( function () {
         require( '../examples/stuff-alt.js' );
@@ -39,7 +39,7 @@ describe( 'readme examples', function () {
     } );
   } );
 
-  describe( 'fifth example', function () {
+  describe( 'fifth example (instance-store.js)', function () {
     it( 'should execute without throwing any exceptions', function () {
       assert.doesNotThrow( function () {
         require( '../examples/instance-store.js' );
@@ -47,7 +47,7 @@ describe( 'readme examples', function () {
     } );
   } );
 
-  describe( 'sixth example', function () {
+  describe( 'sixth example (constructor.js)', function () {
     it( 'should execute without throwing any exceptions', function () {
       assert.doesNotThrow( function () {
         require( '../examples/constructor.js' );
