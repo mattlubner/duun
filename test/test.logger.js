@@ -2,7 +2,8 @@
 'use strict';
 
 
-var assert = require( 'assert' );
+var chai = require( 'chai' );
+var assert = chai.assert;
 var mockConsole = require( './mock.console' );
 
 var Logger = require( '../logger' );

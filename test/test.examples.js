@@ -2,7 +2,8 @@
 'use strict';
 
 
-var assert = require( 'assert' );
+var chai = require( 'chai' );
+var assert = chai.assert;
 
 
 describe( 'readme', function () {
