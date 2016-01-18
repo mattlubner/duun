@@ -6,6 +6,7 @@
   "homepage": "https://github.com/mattlubner/duun",
   "main": "index.js",
   "scripts": {
+    "lint": "eslint *.js",
     "mocha": "mocha",
     "test": "mocha test/test.*.js"
   },
@@ -32,6 +33,7 @@
   "devDependencies": {
     "chai": "^3.0.0",
     "director": "^1.2.8",
+    "eslint": "^1.10.3",
     "event-emitter": "^0.3.4",
     "gulp": "^3.9.0",
     "gulp-ejs": "^1.2.2",

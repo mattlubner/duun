@@ -16,69 +16,91 @@ var name3 = 'yet another duun';
 
 var rtnMap1 = {
   fn1: 'i am an ad-hoc function',
-  fn2: 'i am also an ad-hoc function',
+  fn2: 'i am also an ad-hoc function'
 };
 var fnMap1 = {
-  fn1: function () { return rtnMap1.fn1; },
-  fn2: function () { return rtnMap1.fn2; },
+  fn1: function () {
+    return rtnMap1.fn1;
+  },
+  fn2: function () {
+    return rtnMap1.fn2;
+  }
 };
 var mthdList1 = [
   'fn1',
-  'fn2',
+  'fn2'
 ];
 
 var rtnMap2 = {
-  fn1: 'i am a fan of jumbalaya',
+  fn1: 'i am a fan of jumbalaya'
 };
 var fnMap2 = {
   prop1: 'i am a jumbalaya',
-  fn1: function () { return rtnMap2.fn1; },
+  fn1: function () {
+    return rtnMap2.fn1;
+  }
 };
 
 var rtnMap3 = {
   prop1: 'i am a fan of jumbalaya',
-  fn1: this.prop1,// jshint ignore:line
-  fn2: this.prop1,// jshint ignore:line
+  fn1: this.prop1,
+  fn2: this.prop1
 };
 var fnMap3 = {
   prop1: rtnMap3.fn1,
-  fn1: function () { return this.prop1; },
-  fn2: function () { return this.fn1(); },
+  fn1: function () {
+    return this.prop1;
+  },
+  fn2: function () {
+    return this.fn1();
+  }
 };
 var mthdList3 = [
   'fn1',
-  'fn2',
+  'fn2'
 ];
 
 var rtnMap4 = {
   fn1: 'i am a fan of velociraptors',
-  fn2: 'i am not a fan of velociraptors',
+  fn2: 'i am not a fan of velociraptors'
 };
 var fnMap4Prototype = {
-  fn2: function () { return rtnMap4.fn2; },
+  fn2: function () {
+    return rtnMap4.fn2;
+  }
 };
 var fnMap4 = Object.create( fnMap4Prototype );
-fnMap4.fn1 = function () { return rtnMap4.fn1; };
+fnMap4.fn1 = function () {
+  return rtnMap4.fn1;
+};
 
 var rtnMap5 = {
   prop1Before: 'shake and bake',
-  prop1After: 'taladega nights',
+  prop1After: 'taladega nights'
 };
 var fnMap5 = {
   prop1: rtnMap5.prop1Before,
-  Fn1: function () { this.prop1 = rtnMap5.prop1After; },
+  Fn1: function () {
+    this.prop1 = rtnMap5.prop1After;
+  }
 };
 
 var rtnMap6 = {
   fn1: 'make me a sandwich',
   fn2: 'sudo make me a sandwich',
-  fn3Wrong: 'sudo make me a sad panda',
+  fn3Wrong: 'sudo make me a sad panda'
 };
 var plugin6 = {
   duun: { methods: [ 'fn1', 'fn2' ] },
-  fn1: function () { return rtnMap6.fn1; },
-  fn2: function () { return rtnMap6.fn2; },
-  fn3: function () { return rtnMap6.fn3Wrong; },
+  fn1: function () {
+    return rtnMap6.fn1;
+  },
+  fn2: function () {
+    return rtnMap6.fn2;
+  },
+  fn3: function () {
+    return rtnMap6.fn3Wrong;
+  }
 };
 
 var plugin7 = {
@@ -89,7 +111,9 @@ var plugin7 = {
       name: { value: name, enumerable: true }
     } );
   },
-  fn1: function () { return this.name; },
+  fn1: function () {
+    return this.name;
+  }
 };
 
 
@@ -189,7 +213,7 @@ describe( 'Duun', function () {
     it( 'should fail if a Duun instance is invoked as a constructor', function () {
       var obj1 = new Duun( name1 );
       assert.throws( function () {
-        var obj2 = new obj1( name2 );// jshint ignore:line
+        new obj1( name2 );//eslint-disable-line no-new
       } );
 
     } );
