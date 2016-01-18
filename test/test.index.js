@@ -68,10 +68,10 @@ describe( 'index', function () {
     } );
     it( 'should not proxy log() calls to the console while disabled', function () {
       mockConsole.resetSpies();
-      Logger.consoleDisable();
+      index.disableLogger();
       index.log( 'a message to log' );
       assert.equal( mockConsole.logSpy.callCount, 0 );
-      Logger.consoleEnable();
+      index.enableLogger();
     } );
   } );
 
