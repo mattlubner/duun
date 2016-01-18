@@ -257,6 +257,10 @@ try {
 ## Plugins
 Duun plugins are just your regular variety non-gmo objects, except they have a `.duun` property that itself has a `.methods` array, so you don't have to do anything annoying like manually define a list of methods to proxy!
 
-Also, if a Duun plugin has a `.create()` method, Duun will invoke it with a `name` parameter and reregister the new instance whenever you extend a Duun! That's how the logger knows the name of its Duun object.
+Also, if a Duun plugin has a `.create()` method, Duun will invoke it with a `name` parameter and re-proxy the new instance whenever you extend a Duun! That's how the logger knows the name of its Duun owner.
 
-Currently, the only Duun plugin known to the world is `duun/logger`, which is automatically registered! But you know, no one said you can't make more…! ;P
+Currently there are only two Duun plugins, which are both included with Duun out of the box: `duun/core/logger` and `duun/core/registry`. Require `duun/duun` directly to get a vanilla version of Duun without these plugins.
+
+
+## Open Source
+As always, your suggestions, inquiries, constructive criticism, feature requests and pull-requests are welcome! 😝
