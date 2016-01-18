@@ -1,11 +1,24 @@
 'use strict';
 
-var Duun = module.exports = exports = require( './duun' );
+var Duun = require( './duun' );
+var Logger = require( './core/logger' );
+var proxy = require( './core/proxy' );
+var Registry = require( './core/registry' );
 
-var logger = require( './logger' );
-Duun.registerCorePlugin( logger );
+function AugmentedDuun() {
+  Duun.apply( this, arguments );
+}
 
-var Manager = require( './manager' );
-Duun.registerCorePlugin( Manager );
+AugmentedDuun.prototype = Object.create( Duun.prototype );
+AugmentedDuun.prototype.constructor = AugmentedDuun;
+AugmentedDuun.prototype.plugins = [
+  Logger,
+  Registry
+];
 
-delete Duun.registerCorePlugin;
+AugmentedDuun.create = Duun.create;
+AugmentedDuun.plugins = [];
+
+proxy.call( AugmentedDuun, Registry );
+
+module.exports = AugmentedDuun;

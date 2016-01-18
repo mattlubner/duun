@@ -1,0 +1,90 @@
+# Duun
+
+#  [![npm version](https://badge.fury.io/js/duun.svg)](http://badge.fury.io/js/duun) [![Build Status](https://travis-ci.org/mattlubner/duun.svg?branch=master)](https://travis-ci.org/mattlubner/duun)
+
+    ``````````````````````````````````````````````````````````````````````````
+    ``````````````````````````````````````````` ``````````````````````````````
+    ``````````````````````````````````````.:,,,,.`````````````````````````````
+    ``````````````````````````````````;+':,,,,,,,,,,.`````````````````````````
+    `````````````````````````````.+++++:,,,,,,,,,,,,,,,.``````````````````````
+    `````````````````````````:++++++++;::,,,,,,,,,,,,,,,,,,```````````````````
+    `````````````````````:++++++++++++':,,,,,,,,,,,,,,,,,,,,,,.```````````````
+    `````````````````.++++++++++++++++';,,,,,,,,,,,,,,,,,,,,,,,,,.````````````
+    `````````````.++++++++++++++++++++'';,,,,,,,,,,,,,,,,,,,,,,,,,,,,.````````
+    `````````.+++++++++++++++++++++++'''';:,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,.````
+    `````:++++++++++++++++++++++++++++''''';:,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,`
+    .++++++++++++++++++++++++++++++++++'''''';:,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,,
+    ++++++++++++++++++++++++++++++++++++''''''';:,,,,,,,,,,,,,,,,,,,,,,,,,,,,,
+    +++++++++++++++++++++++++++++++++''''''''''';;;:,,,,,,,,,,,,,,,,,,,,,,,,,,
+    +++++++++'+'+''+'+++'+''''+'''''++'''''''''';';;;:,,,,,,,,,,,,,,,,,,,,,,,,
+
+Duun is an extensible sandbox written in JavaScript for decoupling application components from package dependencies. In essence, Duun provides syntactic sugar for aggregating dependency injection across an entire application.
+
+Use a bundler like [Webpack](http://webpack.github.io) or [Browserify](http://browserify.org) to bring Duun to a browser near you!
+
+
+## Description
+In a nutshell, Duun lets you reduce boilerplate code through creation of a single object that proxies the functionality of numerous distinct components (primarily other packages or components). This is achieved by proxying specific methods of a package onto a Duun via `proxy()`, resulting in context-aware proxy methods on the Duun itself that pass on invocations to the original methods. The resulting Duun can than be passed around your application (and extended, as needed), obviating the need to hard-code `require()` calls with package names. This decouples your application from specific packages, resulting in behavioral-based dependencies, and promotes testing by coalescing dependency injection to a single location for your entire application.
+
+## Installation
+Use [`npm`](http://npmjs.com/) to install Duun:
+
+```sh
+# in a shell
+npm install --save duun
+```
+
+## Usage
+```js
+//////////////
+/// app.js ///
+//////////////
+<%- app %>
+```
+
+```js
+////////////////
+/// stuff.js ///
+////////////////
+<%- stuff %>
+```
+
+### Alternative Cross-file Usage
+Note that the `addInstance() / getInstance()` pattern is not recommended for use within packages intended to be used as dependencies, as there is the possibility of clashes between identically-named Duuns! In such packages, it is recommended to export the created Duun and use relative pathing to require it from other files. If that is undesireable, please fall back to the convention of naming your Duun the same as the package's publically-published name, as this name is both more likely to be unique and more easily predictable.
+
+```js
+//////////////////
+/// app-alt.js ///
+//////////////////
+<%- app_alt %>
+```
+
+```js
+////////////////////
+/// stuff-alt.js ///
+////////////////////
+<%- stuff_alt %>
+```
+
+### Instance Store Usage
+```js
+/////////////////////////
+/// instance-store.js ///
+/////////////////////////
+<%- instance_store %>
+```
+
+### Constructor Usage
+```js
+//////////////////////
+/// constructor.js ///
+//////////////////////
+<%- constructor %>
+```
+
+## Plugins
+Duun plugins are just your regular variety non-gmo objects, except they have a `.duun` property that itself has a `.methods` array, so you don't have to do anything annoying like manually define a list of methods to proxy!
+
+Also, if a Duun plugin has a `.create()` method, Duun will invoke it with a `name` parameter and reregister the new instance whenever you extend a Duun! That's how the logger knows the name of its Duun object.
+
+Currently, the only Duun plugin known to the world is `duun/logger`, which is automatically registered! But you know, no one said you can't make more…! ;P

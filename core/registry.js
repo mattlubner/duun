@@ -1,35 +1,35 @@
 /**
- * Instance indexer provides a way to create/retrieve class instances by name.
+ * Registry provides a way to create/retrieve objects by name.
  */
 
 'use strict';
 
 /**
- * Manager constructor
+ * Registry constructor
  * @arg  [String]  name
  * @constructor
  */
-function Manager( name ) {
+function Registry( name ) {
   Object.defineProperty( this, 'name', { value: name } );
   Object.defineProperty( this, 'instances', { value: Object.create( null ), writable: true } );
 }
 
 /**
- * Manager factory function
- * @return  {Manager}
+ * Registry factory function
+ * @return  {Registry}
  */
-Manager.prototype.create = Manager.create = function () {
+Registry.prototype.create = Registry.create = function () {
   var instance = Object.create( this.prototype || this );
-  Manager.apply( instance, arguments );
+  Registry.apply( instance, arguments );
   return instance;
 };
 
 /**
- * Add an instance to the managed instance index.
+ * Add an instance to the object registry.
  * @arg  {Object}  instance
  * @void
  */
-Manager.prototype.addInstance = function ( instance ) {
+Registry.prototype.addInstance = function ( instance ) {
   if ( typeof instance !== 'object' ) {
     throw new Error( 'No instance was passed' );
   }
@@ -40,11 +40,11 @@ Manager.prototype.addInstance = function ( instance ) {
 };
 
 /**
- * Get an instance from the managed instance index.
+ * Get an instance from the object registry.
  * @arg  {String}  name
  * @return  {Object}
  */
-Manager.prototype.getInstance = function ( name ) {
+Registry.prototype.getInstance = function ( name ) {
   if ( typeof name !== 'string' ) {
     throw new Error( 'No instance name provided!' );
   }
@@ -55,7 +55,7 @@ Manager.prototype.getInstance = function ( name ) {
  * Duuned plugin methods.
  * @type {Array}
  */
-Object.defineProperty( Manager, 'duun', {
+Object.defineProperty( Registry.prototype, 'duun', {
   value: Object.create( null, {
     methods: {
       value: [
@@ -66,4 +66,4 @@ Object.defineProperty( Manager, 'duun', {
   } )
 } );
 
-module.exports = Manager;
+module.exports = Registry;

@@ -6,27 +6,27 @@ var chai = require( 'chai' );
 var assert = chai.assert;
 
 
-describe( 'manager', function () {
+describe( 'registry', function () {
 
-  var Manager = require( '../manager' );
+  var Registry = require( '../core/registry' );
 
   describe( 'constructors', function () {
     it( 'should not be usable as a library', function () {
-      assert.isFunction( Manager );
-      assert.isNotFunction( Manager.addInstance );
-      assert.isNotFunction( Manager.getInstance );
+      assert.isFunction( Registry );
+      assert.isNotFunction( Registry.addInstance );
+      assert.isNotFunction( Registry.getInstance );
     } );
     it( 'should export a working constructor function', function () {
-      assert.isFunction( Manager );
-      var testman = new Manager( 'test' );
-      assert.instanceOf( testman, Manager );
+      assert.isFunction( Registry );
+      var testman = new Registry( 'test' );
+      assert.instanceOf( testman, Registry );
       assert.isFunction( testman.addInstance );
       assert.isFunction( testman.getInstance );
     } );
     it( 'should export a working instance factory function named .create()', function () {
-      assert.isFunction( Manager.create );
-      var testman = Manager.create( 'test' );
-      assert.instanceOf( testman, Manager );
+      assert.isFunction( Registry.create );
+      var testman = Registry.create( 'test' );
+      assert.instanceOf( testman, Registry );
       assert.isFunction( testman.addInstance );
       assert.isFunction( testman.getInstance );
     } );
@@ -34,7 +34,7 @@ describe( 'manager', function () {
 
   describe( 'indexing', function () {
     it( 'should store and retrieve instances by their .name property', function () {
-      var testman = new Manager( 'test' );
+      var testman = new Registry( 'test' );
       function TestClass( name ) {
         this.name = name;
       }
@@ -56,7 +56,7 @@ describe( 'manager', function () {
   describe( 'duun plugin', function () {
     it( 'should have all mapped functions', function () {
       var Index = require( '../' );
-      Manager.duun.methods.forEach( function ( methodName ) {
+      Registry.prototype.duun.methods.forEach( function ( methodName ) {
         assert.property( Index, methodName );
         assert.isFunction( Index[ methodName ] );
       } );
