@@ -6,7 +6,7 @@ var chai = require( 'chai' );
 var assert = chai.assert;
 var mockConsole = require( './mock.console' );
 
-var Logger = require( '../logger' );
+var Logger = require( '../core/logger' );
 var Duun = require( '../duun' );
 
 Logger.inject( {

@@ -10,8 +10,8 @@ describe( 'index', function () {
 
   var Duun = require( '../duun' );
   var Index = require( '../index' );
-  var Logger = require( '../logger' );
-  var Manager = require( '../manager' );
+  var Logger = require( '../core/logger' );
+  var Manager = require( '../core/manager' );
 
   var mockConsole = require( './mock.console' );
   Logger.inject( {

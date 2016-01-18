@@ -6,7 +6,7 @@
 
 'use strict';
 
-var proxy = require( './lib/proxy' );
+var proxy = require( './core/proxy' );
 
 /**
  * Duun constructor

@@ -1,9 +1,9 @@
 'use strict';
 
 var Duun = require( './duun' );
-var Logger = require( './logger' );
-var Manager = require( './manager' );
-var proxy = require( './lib/proxy' );
+var Logger = require( './core/logger' );
+var Manager = require( './core/manager' );
+var proxy = require( './core/proxy' );
 
 function AugmentedDuun() {
   Duun.apply( this, arguments );

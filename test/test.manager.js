@@ -8,7 +8,7 @@ var assert = chai.assert;
 
 describe( 'manager', function () {
 
-  var Manager = require( '../manager' );
+  var Manager = require( '../core/manager' );
 
   describe( 'constructors', function () {
     it( 'should not be usable as a library', function () {
