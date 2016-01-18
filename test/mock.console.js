@@ -3,29 +3,35 @@
 var sinon = require( 'sinon' );
 
 exports.history = [];
-exports.logSpy = sinon.spy();
-exports.debugSpy = sinon.spy();
-exports.warnSpy = sinon.spy();
-exports.errorSpy = sinon.spy();
+exports.spies = {
+  log: sinon.spy(),
+  debug: sinon.spy(),
+  warn: sinon.spy(),
+  error: sinon.spy()
+};
+exports.logSpy = exports.spies.log;
+exports.debugSpy = exports.spies.debug;
+exports.warnSpy = exports.spies.warn;
+exports.errorSpy = exports.spies.error;
 
 exports.log = function () {
   this.history.push( Array.prototype.slice.call( arguments ) );
-  this.logSpy();
+  this.spies.log();
 };
 
 exports.debug = function () {
   this.history.push( Array.prototype.slice.call( arguments ) );
-  this.debugSpy();
+  this.spies.debug();
 };
 
 exports.warn = function () {
   this.history.push( Array.prototype.slice.call( arguments ) );
-  this.warnSpy();
+  this.spies.warn();
 };
 
 exports.error = function () {
   this.history.push( Array.prototype.slice.call( arguments ) );
-  this.errorSpy();
+  this.spies.error();
 };
 
 exports.tail = function () {
@@ -33,10 +39,10 @@ exports.tail = function () {
 };
 
 exports.resetSpies = function () {
-  this.logSpy.reset();
-  this.debugSpy.reset();
-  this.warnSpy.reset();
-  this.errorSpy.reset();
+  this.spies.log.reset();
+  this.spies.debug.reset();
+  this.spies.warn.reset();
+  this.spies.error.reset();
 };
 
 exports.resetSpies();
