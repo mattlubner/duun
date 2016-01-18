@@ -11,7 +11,7 @@ describe( 'index', function () {
   var Duun = require( '../duun' );
   var Index = require( '../index' );
   var Logger = require( '../core/logger' );
-  var Manager = require( '../core/manager' );
+  var Registry = require( '../core/registry' );
 
   var mockConsole = require( './mock.console' );
   Logger.inject( {
@@ -40,7 +40,7 @@ describe( 'index', function () {
         assert.notProperty( Duun, methodName );
         assert.notProperty( duun, methodName );
       } );
-      Manager.prototype.duun.methods.forEach( function ( methodName ) {
+      Registry.prototype.duun.methods.forEach( function ( methodName ) {
         assert.notProperty( Duun, methodName );
         assert.notProperty( duun, methodName );
       } );
@@ -75,16 +75,16 @@ describe( 'index', function () {
     } );
   } );
 
-  // check that manager is properly registered
-  describe( 'duun/manager', function () {
+  // check that registry is properly registered
+  describe( 'duun/registry', function () {
     it( 'should have plugin functionality mapped onto library', function () {
-      Manager.prototype.duun.methods.forEach( function ( methodName ) {
+      Registry.prototype.duun.methods.forEach( function ( methodName ) {
         assert.property( Index, methodName );
         assert.isFunction( Index[ methodName ] );
       } );
     } );
     it( 'should have plugin functionality mapped onto new instances', function () {
-      Manager.prototype.duun.methods.forEach( function ( methodName ) {
+      Registry.prototype.duun.methods.forEach( function ( methodName ) {
         assert.property( index, methodName );
         assert.isFunction( index[ methodName ] );
       } );

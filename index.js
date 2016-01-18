@@ -2,8 +2,8 @@
 
 var Duun = require( './duun' );
 var Logger = require( './core/logger' );
-var Manager = require( './core/manager' );
 var proxy = require( './core/proxy' );
+var Registry = require( './core/registry' );
 
 function AugmentedDuun() {
   Duun.apply( this, arguments );
@@ -13,13 +13,12 @@ AugmentedDuun.prototype = Object.create( Duun.prototype );
 AugmentedDuun.prototype.constructor = AugmentedDuun;
 AugmentedDuun.prototype.plugins = [
   Logger,
-  Manager
+  Registry
 ];
 
 AugmentedDuun.create = Duun.create;
 AugmentedDuun.plugins = [];
 
-// proxy.call( AugmentedDuun, Logger );
-proxy.call( AugmentedDuun, Manager );
+proxy.call( AugmentedDuun, Registry );
 
 module.exports = AugmentedDuun;
