@@ -18,63 +18,75 @@ describe( 'index', function () {
     console: mockConsole
   } );
 
+  var duun = Duun.create( 'global' );
   var index = Index.create( 'global' );
 
   // check if duun instance is properly initiated
   describe( 'duun/index', function () {
-    it( 'should export an augmented version of Duun' );
-    it( 'should not alter the duun export after augmentation' );
-    it.skip( 'should remain uninitialized', function () {
-      // TODO: refactor as needed to support previous test cases
-      // OLD: is a prototype, not an instance
+    it( 'should remain uninitialized', function () {
       assert.isFunction( Index );
       assert.notInstanceOf( Index, Duun );
       assert.isFunction( Index.create );
-      assert.isUndefined( Index.proxy );
-      assert.isUndefined( Index.register );
-      assert.isUndefined( Index.registerCorePlugin );
     } );
-    it.skip( 'should retain create() factory function after initialization', function () {
-      // TODO: refactor as needed to support previous test cases
-      assert.isNotFunction( index );
+    it( 'should have augmented Duun functionality after initialization', function () {
+      assert.instanceOf( index, Index );
       assert.instanceOf( index, Duun );
       assert.isFunction( index.create );
-      assert.isDefined( index.proxy );
-      assert.isDefined( index.register );
-      assert.isUndefined( index.registerCorePlugin );
+      assert.isFunction( index.proxy );
+      assert.isFunction( index.register );
+    } );
+    it( 'should not alter the duun export after augmentation', function () {
+      Logger.prototype.duun.methods.forEach( function ( methodName ) {
+        assert.notProperty( Duun, methodName );
+        assert.notProperty( duun, methodName );
+      } );
+      Manager.prototype.duun.methods.forEach( function ( methodName ) {
+        assert.notProperty( Duun, methodName );
+        assert.notProperty( duun, methodName );
+      } );
+    } );
+    it( 'should not permit registration of plugins onto the exported, uninitialized Duun prototype', function () {
+      assert.notProperty( Duun, 'proxy' );
+      assert.notProperty( Duun, 'register' );
+      assert.notProperty( Index, 'proxy' );
+      assert.notProperty( Index, 'register' );
     } );
   } );
 
   // check that logger is properly registered
   describe( 'duun/logger', function () {
-    it( 'should have all mapped functions', function () {
+    it( 'should have plugin functionality mapped onto new instances', function () {
       Logger.prototype.duun.methods.forEach( function ( methodName ) {
-        assert.property( Index, methodName );
-        assert.isFunction( Index[ methodName ] );
+        assert.property( index, methodName );
+        assert.isFunction( index[ methodName ] );
       } );
     } );
     it( 'should proxy log() calls to the console while enabled', function () {
       mockConsole.resetSpies();
-      var aLogger = Logger.create( 'a logger' );
-      aLogger.log( 'a message to log' );
+      index.log( 'a message to log' );
       assert( mockConsole.logSpy.calledOnce );
     } );
     it( 'should not proxy log() calls to the console while disabled', function () {
       mockConsole.resetSpies();
       Logger.consoleDisable();
-      var aLogger = Logger.create( 'a logger' );
-      aLogger.log( 'a message to log' );
-      assert.equal( 0, mockConsole.logSpy.callCount );
+      index.log( 'a message to log' );
+      assert.equal( mockConsole.logSpy.callCount, 0 );
       Logger.consoleEnable();
     } );
   } );
 
   // check that manager is properly registered
   describe( 'duun/manager', function () {
-    it( 'should have all mapped functions', function () {
+    it( 'should have plugin functionality mapped onto library', function () {
       Manager.prototype.duun.methods.forEach( function ( methodName ) {
         assert.property( Index, methodName );
         assert.isFunction( Index[ methodName ] );
+      } );
+    } );
+    it( 'should have plugin functionality mapped onto new instances', function () {
+      Manager.prototype.duun.methods.forEach( function ( methodName ) {
+        assert.property( index, methodName );
+        assert.isFunction( index[ methodName ] );
       } );
     } );
     it( 'should store and retrieve duun instances by name', function () {

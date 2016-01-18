@@ -131,11 +131,12 @@ function assertObjectIsADuun( obj, name ) {
   // obj.create
   assert.property( obj, 'create' );
   assert.isFunction( obj.create );
-  assert.equal( obj.create, Duun.prototype.create );
   // obj.register
   assert.property( obj, 'register' );
   assert.isFunction( obj.register );
-  assert.equal( obj.register, Duun.prototype.register );
+  // obj.proxy
+  assert.property( obj, 'proxy' );
+  assert.isFunction( obj.proxy );
 }
 
 function assertObjectHasMappedFunctions( obj, fnMap, rtnMap ) {
@@ -197,10 +198,10 @@ describe( 'Duun', function () {
       var obj1 = Duun.create( name1 );
       var obj2 = obj1.create( name2 );
       assertObjectIsADuun( obj2, name2 );
-      assert.isTrue( obj1.isPrototypeOf( obj2 ) );
+      assert( obj1.isPrototypeOf( obj2 ), 'sub-duun should prototypically inherit from parent duun' );
       var obj3 = obj2.create( name3 );
       assertObjectIsADuun( obj3, name3 );
-      assert.isTrue( obj2.isPrototypeOf( obj3 ) );
+      assert( obj2.isPrototypeOf( obj3 ), 'sub-duun should prototypically inherit from parent duun' );
     } );
   } );// 'create()'
 
@@ -231,8 +232,6 @@ describe( 'Duun', function () {
       var obj2 = Duun.create( name2 );
       assert.notEqual( obj1, obj2 );
       assert.notEqual( obj1.name, obj2.name );
-      assert.isFalse( obj1.isPrototypeOf( obj2 ) );
-      assert.isFalse( obj2.isPrototypeOf( obj1 ) );
     } );
     it( 'should inherit properties from their parent Duun instance', function () {
       var obj1 = Duun.create( name1 );
@@ -243,7 +242,7 @@ describe( 'Duun', function () {
       var obj2 = obj1.create( name2 );
       assert.notEqual( obj1, obj2 );
       assert.notEqual( obj1.name, obj2.name );
-      assert.isTrue( obj1.isPrototypeOf( obj2 ) );
+      assert( obj1.isPrototypeOf( obj2 ), 'sub-duun should prototypically inherit from parent duun' );
       assert.property( obj2, 'hello' );
       assert.isString( obj2.hello );
       assert.equal( obj2.hello, 'world' );
@@ -388,7 +387,6 @@ describe( 'Duun', function () {
     var duun = Duun.create( 'global' );
     it( 'should create new instances of registered Duun plugins', function () {
       var duun1 = duun.create( name1 );
-      // duun1.register( plugin6 );
       duun1.register( plugin7 );
       assert.equal( duun1.name, duun1.fn1() );
       var duun2 = duun1.create( name2 );
