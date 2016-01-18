@@ -7,8 +7,7 @@ node_js:
 deploy:
   provider: npm
   email: "$NPM_EMAIL"
-  api_key:
-    secure: "$NPM_SECURED_TOKEN"
+  api_key: "$NPM_TOKEN"
   on:
     repo: mattlubner/duun
     branch: master
