@@ -1,4 +1,4 @@
-# Duun
+# Duun (Deprecated)
 
 #  [![npm version](https://badge.fury.io/js/duun.svg)](http://badge.fury.io/js/duun) [![Build Status](https://travis-ci.org/mattlubner/duun.svg?branch=master)](https://travis-ci.org/mattlubner/duun)
 
@@ -17,6 +17,8 @@
     ++++++++++++++++++++++++++++++++++++''''''';:,,,,,,,,,,,,,,,,,,,,,,,,,,,,,
     +++++++++++++++++++++++++++++++++''''''''''';;;:,,,,,,,,,,,,,,,,,,,,,,,,,,
     +++++++++'+'+''+'+++'+''''+'''''++'''''''''';';;;:,,,,,,,,,,,,,,,,,,,,,,,,
+
+> *_Warning! Duun is legacy software & no longer supported!_*
 
 Duun is an extensible sandbox written in JavaScript for decoupling application components from package dependencies. In essence, Duun provides syntactic sugar for aggregating dependency injection across an entire application.
 
